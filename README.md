@@ -1,5 +1,11 @@
 "# Browser-Midi-Keyboard" 
 
+4.  Added log output container
+
+
+<img width="843" height="424" alt="image" src="https://github.com/user-attachments/assets/a3fceec8-bbfd-4776-b45c-d83483d7652b" />
+
+
 3. 'Keyboard' added
 
 
