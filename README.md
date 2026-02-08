@@ -1,5 +1,11 @@
 "# Browser-Midi-Keyboard" 
 
+2. Added multiple keys
+
+
+<img width="320" height="214" alt="image" src="https://github.com/user-attachments/assets/946464a6-4aa4-4374-b101-b8cd029b13be" />
+
+
 1st interation:
 
 
