@@ -97,7 +97,7 @@ h2 {
 .log-container {
     position: absolute;  /* Pins it relative to the screen */
     bottom: 20px;        /* 20px up from the bottom edge */
-    width: 90%;          /* Makes it wider to feel like a footer log */
+    width: 80%;          /* Makes it wider to feel like a footer log */
     max-width: 800px;
     border: 1px solid #00ff99;
     background: rgba(0, 40, 20, 0.4); /* Slightly more opaque for readability */
@@ -130,3 +130,45 @@ h2 {
     padding-left: 8px;
 }
 /* **********************END OF LOG CONTAINER********************** */
+
+/********************** MIDI CHANNEL SELECTOR ********************* */
+
+.channel-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.channel-label {
+    font-size: 20px;
+    text-shadow: 0 0 5px #00ff99;
+}
+
+.channel-row {
+    display: flex;
+    border: 1px solid #00ff99;
+}
+
+.ch-btn {
+    padding: 5px 10px;
+    border-right: 1px solid #00ff99;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.ch-btn:last-child {
+    border-right: none; /* Remove border from the last box */
+}
+
+/* The Inversed Style */
+.ch-btn.selected {
+    background-color: #00ff99;
+    color: #161c12;
+    text-shadow: none;
+    box-shadow: 0 0 10px #00ff99;
+}
+
+/********************END OF MIDI CHANNEL SELECTOR ********************* */

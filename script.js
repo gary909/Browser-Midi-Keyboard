@@ -1,21 +1,22 @@
+// --- GLOBAL STATE & CONFIG ---
 let midiOutput = null;
+let currentChannel = 0; // Default to Channel 1 (Hex 0x90)
+const logDisplay = document.getElementById('midi-log');
+const channelButtons = document.querySelectorAll('.ch-btn');
+const activeNotes = new Set();
 
 // MIDI Map: Computer Key -> MIDI Note Number
 const keyToNote = {
-    'a': 60, // C
-    's': 62, // D
-    'd': 64, // E
-    'f': 65, // F
-    'g': 67, // G
-    'h': 69, // A
-    'j': 71, // B
-    'k': 72  // C (High)
+    'a': 60, 
+    's': 62, 
+    'd': 64, 
+    'f': 65, 
+    'g': 67, 
+    'h': 69, 
+    'j': 71, 'k': 72
 };
 
-// Keep track of active notes to prevent "stuttering" when holding a key
-const activeNotes = new Set();
-
-// Request MIDI Access
+// --- INITIALIZATION ---
 if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
 }
@@ -34,69 +35,73 @@ function onMIDIFailure() {
     document.getElementById('status').innerText = "MIDI ACCESS DENIED";
 }
 
-// Event Listeners
+// --- MIDI LOGIC ---
+function playNote(note) {
+    if (midiOutput) {
+        const statusByte = 0x90 + currentChannel;
+        const velocity = 0x7f; // Full volume
+        const message = [statusByte, note, velocity];
+        
+        midiOutput.send(message);
+        
+        // Log both standard info and Raw Data
+        const rawHex = `[0x${statusByte.toString(16)}, ${note}, ${velocity}]`;
+        addToLog(`NOTE_ON:${note} | RAW: ${rawHex}`);
+    }
+}
+
+function stopNote(note) {
+    if (midiOutput) {
+        const statusByte = 0x80 + currentChannel;
+        const message = [statusByte, note, 0x00];
+        
+        midiOutput.send(message);
+        
+        const rawHex = `[0x${statusByte.toString(16)}, ${note}, 0]`;
+        addToLog(`NOTE_OFF: ${note} | RAW: ${rawHex}`);
+    }
+}
+
+// --- EVENT LISTENERS ---
 window.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase();
     const note = keyToNote[key];
-
     if (note && !activeNotes.has(note)) {
         activeNotes.add(note);
         playNote(note);
-
-        // UI Update: Add pressed class
-        const el = document.getElementById(`key-${note}`);
-        if (el) el.classList.add('pressed');
+        document.getElementById(`key-${note}`)?.classList.add('pressed');
     }
 });
 
 window.addEventListener('keyup', (event) => {
     const key = event.key.toLowerCase();
     const note = keyToNote[key];
-
     if (note) {
         activeNotes.delete(note);
         stopNote(note);
-
-        // UI Update: Remove pressed class
-        const el = document.getElementById(`key-${note}`);
-        if (el) el.classList.remove('pressed');
+        document.getElementById(`key-${note}`)?.classList.remove('pressed');
     }
 });
 
-function playNote(note) {
-    if (midiOutput) {
-        midiOutput.send([0x90, note, 0x7f]);
-        console.log(`MIDI ON: ${note}`);
-        addToLog(`NOTE_ON: [${note}] VEL: 127`); // log for display
-    }
-}
+// Channel Switching Logic
+channelButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        channelButtons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        currentChannel = parseInt(btn.dataset.ch);
+        addToLog(`SYSTEM: CHANNEL_SWAP -> ${currentChannel + 1}`);
+    });
+});
 
-function stopNote(note) {
-    if (midiOutput) {
-        midiOutput.send([0x80, note, 0x00]);
-        console.log(`MIDI OFF: ${note}`);
-        addToLog(`NOTE_OFF: [${note}]`); // log for display 
-    }
-}
-
-const logDisplay = document.getElementById('midi-log');
-
-// Simple function to add entries to the MIDI log display
+// --- UI HELPERS ---
 function addToLog(message) {
     const entry = document.createElement('div');
     entry.className = 'log-entry';
     entry.innerText = `> ${message}`;
-    
     logDisplay.appendChild(entry);
-
-    // Keep the latest log at the bottom
     logDisplay.scrollTop = logDisplay.scrollHeight;
 
-    // Optional: Remove old logs to keep performance snappy
     if (logDisplay.childNodes.length > 50) {
         logDisplay.removeChild(logDisplay.firstChild);
     }
 }
-
-
-
