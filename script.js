@@ -1,52 +1,70 @@
 let midiOutput = null;
 
-// 1. Request MIDI Access
+// MIDI Map: Computer Key -> MIDI Note Number
+const keyToNote = {
+    'a': 60, // C
+    's': 62, // D
+    'd': 64, // E
+    'f': 65, // F
+    'g': 67, // G
+    'h': 69, // A
+    'j': 71, // B
+    'k': 72  // C (High)
+};
+
+// Keep track of active notes to prevent "stuttering" when holding a key
+const activeNotes = new Set();
+
+// Request MIDI Access
 if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-} else {
-    alert("No MIDI support in your browser.");
 }
 
 function onMIDISuccess(midiAccess) {
     const outputs = Array.from(midiAccess.outputs.values());
     if (outputs.length > 0) {
-        midiOutput = outputs[0]; // Select the first available MIDI device
-        document.getElementById('status').innerText = `Connected to: ${midiOutput.name}`;
+        midiOutput = outputs[0];
+        document.getElementById('status').innerText = `READY: ${midiOutput.name}`;
     } else {
-        document.getElementById('status').innerText = "No MIDI output devices found.";
+        document.getElementById('status').innerText = "NO MIDI OUTPUT DETECTED";
     }
 }
 
 function onMIDIFailure() {
-    document.getElementById('status').innerText = "Could not access MIDI devices.";
+    document.getElementById('status').innerText = "MIDI ACCESS DENIED";
 }
 
-// 2. Listen for Keyboard Events
+// Event Listeners
 window.addEventListener('keydown', (event) => {
-    if (event.key === 'a' && !event.repeat) {
-        playNote(60); // 60 is Middle C
+    const key = event.key.toLowerCase();
+    const note = keyToNote[key];
+
+    if (note && !activeNotes.has(note)) {
+        activeNotes.add(note);
+        playNote(note);
     }
 });
 
 window.addEventListener('keyup', (event) => {
-    if (event.key === 'a') {
-        stopNote(60);
+    const key = event.key.toLowerCase();
+    const note = keyToNote[key];
+
+    if (note) {
+        activeNotes.delete(note);
+        stopNote(note);
     }
 });
 
-// 3. Send MIDI Messages
 function playNote(note) {
     if (midiOutput) {
-        const noteOn = [0x90, note, 0x7f]; // 0x90 = Note On, 0x7f = Full Velocity
-        midiOutput.send(noteOn);
-        console.log(`Sent: Note On ${note}`, noteOn);
+        midiOutput.send([0x90, note, 0x7f]);
+        console.log(`MIDI ON: ${note}`);
     }
 }
 
 function stopNote(note) {
     if (midiOutput) {
-        const noteOff = [0x80, note, 0x00]; // 0x80 = Note Off
-        midiOutput.send(noteOff);
-        console.log(`Sent: Note Off ${note}`, noteOff);
+        midiOutput.send([0x80, note, 0x00]);
+        console.log(`MIDI OFF: ${note}`);
     }
 }
