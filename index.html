@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="scanlines"></div>
     <div class="container">
-        <div class="scanlines"></div>
         <h2>MIDI KEYBOARD</h2>
         <p id="status">INITIALIZING...</p>
         <div class="keyboard-visual">
@@ -24,6 +24,10 @@
             <span id="key-71" class="key">J</span>
             <span id="key-72" class="key">K</span>
         </div>
+    </div>
+    <div class="log-container">
+        <div class="log-header">SYSTEM OUTPUT</div>
+        <div id="midi-log" class="log-content"></div>
     </div>
     <script src="script.js"></script>
 </body>

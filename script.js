@@ -67,6 +67,7 @@ function playNote(note) {
     if (midiOutput) {
         midiOutput.send([0x90, note, 0x7f]);
         console.log(`MIDI ON: ${note}`);
+        addToLog(`NOTE_ON: [${note}] VEL: 127`); // log for display
     }
 }
 
@@ -74,5 +75,28 @@ function stopNote(note) {
     if (midiOutput) {
         midiOutput.send([0x80, note, 0x00]);
         console.log(`MIDI OFF: ${note}`);
+        addToLog(`NOTE_OFF: [${note}]`); // log for display 
     }
 }
+
+const logDisplay = document.getElementById('midi-log');
+
+// Simple function to add entries to the MIDI log display
+function addToLog(message) {
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerText = `> ${message}`;
+    
+    logDisplay.appendChild(entry);
+
+    // Keep the latest log at the bottom
+    logDisplay.scrollTop = logDisplay.scrollHeight;
+
+    // Optional: Remove old logs to keep performance snappy
+    if (logDisplay.childNodes.length > 50) {
+        logDisplay.removeChild(logDisplay.firstChild);
+    }
+}
+
+
+
