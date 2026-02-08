@@ -1,5 +1,12 @@
 "# Browser-Midi-Keyboard" 
 
+5. Added MIDI channel selector:
+
+
+<img width="789" height="495" alt="image" src="https://github.com/user-attachments/assets/ac31059f-bede-4a3f-bc2f-ecb3f2cc6a3e" />
+
+
+
 4.  Added log output container
 
 
