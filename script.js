@@ -42,6 +42,10 @@ window.addEventListener('keydown', (event) => {
     if (note && !activeNotes.has(note)) {
         activeNotes.add(note);
         playNote(note);
+
+        // UI Update: Add pressed class
+        const el = document.getElementById(`key-${note}`);
+        if (el) el.classList.add('pressed');
     }
 });
 
@@ -52,6 +56,10 @@ window.addEventListener('keyup', (event) => {
     if (note) {
         activeNotes.delete(note);
         stopNote(note);
+
+        // UI Update: Remove pressed class
+        const el = document.getElementById(`key-${note}`);
+        if (el) el.classList.remove('pressed');
     }
 });
 

@@ -36,6 +36,7 @@ h2 {
     color: #00ff99;
     margin-top: 10px;
     display: block;
+    text-shadow: 0 0 5px rgba(0, 255, 153, 0.5);
 }
 
 .scanlines {
@@ -59,4 +60,32 @@ h2 {
     5% { opacity: 0.9; }
     10% { opacity: 0.95; }
     100% { opacity: 1; }
+}
+
+.keyboard-visual {
+    margin-top: 2rem;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.key {
+    border: 1px solid #00ff99;
+    padding: 10px 20px;
+    font-size: 24px;
+    transition: all 0.1s ease;
+    
+    /* Text Glow */
+    text-shadow: 0 0 8px rgba(0, 255, 153, 0.6);
+    /* Border Glow */
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.2);
+}
+
+/* The "Pressed" state: Darker and transparent */
+.key.pressed {
+    background-color: rgba(0, 255, 153, 0.1);
+    color: rgba(0, 255, 153, 0.3);
+    text-shadow: none; /* Removes the text glow */
+    box-shadow: none;   /* Removes the border glow */
+    transform: scale(0.95);
 }
