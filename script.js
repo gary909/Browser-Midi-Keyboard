@@ -7,13 +7,19 @@ const activeNotes = new Set();
 
 // MIDI Map: Computer Key -> MIDI Note Number
 const keyToNote = {
-    'a': 60, 
-    's': 62, 
-    'd': 64, 
-    'f': 65, 
-    'g': 67, 
-    'h': 69, 
-    'j': 71, 'k': 72
+    'a': 60, // C
+    'w': 61, // C#
+    's': 62, // D
+    'e': 63, // D#
+    'd': 64, // E
+    'f': 65, // F
+    't': 66, // F#
+    'g': 67, // G
+    'y': 68, // G#
+    'h': 69, // A
+    'u': 70, // A#
+    'j': 71, // B
+    'k': 72  // C (High)
 };
 
 // --- INITIALIZATION ---
@@ -46,7 +52,7 @@ function playNote(note) {
         
         // Log both standard info and Raw Data
         const rawHex = `[0x${statusByte.toString(16)}, ${note}, ${velocity}]`;
-        addToLog(`NOTE_ON:${note} | RAW: ${rawHex}`);
+        addToLog(`NOTE_ON:  ${note} | RAW: ${rawHex}`);
     }
 }
 
