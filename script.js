@@ -99,6 +99,39 @@ channelButtons.forEach(btn => {
     });
 });
 
+// Mouse Click Logic for Keys
+document.querySelectorAll('.key').forEach(keyElement => {
+    keyElement.addEventListener('mousedown', (event) => {
+        const noteStr = keyElement.id.split('-')[1];
+        const note = parseInt(noteStr);
+        if (note && !activeNotes.has(note)) {
+            activeNotes.add(note);
+            playNote(note);
+            keyElement.classList.add('pressed');
+        }
+    });
+
+    keyElement.addEventListener('mouseup', (event) => {
+        const noteStr = keyElement.id.split('-')[1];
+        const note = parseInt(noteStr);
+        if (note) {
+            activeNotes.delete(note);
+            stopNote(note);
+            keyElement.classList.remove('pressed');
+        }
+    });
+
+    keyElement.addEventListener('mouseleave', (event) => {
+        const noteStr = keyElement.id.split('-')[1];
+        const note = parseInt(noteStr);
+        if (note && activeNotes.has(note)) {
+            activeNotes.delete(note);
+            stopNote(note);
+            keyElement.classList.remove('pressed');
+        }
+    });
+});
+
 // --- UI HELPERS ---
 function addToLog(message) {
     const entry = document.createElement('div');
